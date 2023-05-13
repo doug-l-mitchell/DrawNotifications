@@ -42,8 +42,15 @@ namespace rodeogo
                 // find dates that the events will start in order to trigger the run function
                 foreach(var dt in data.Select(d => d.EventDate).Distinct())
                 {
+					try
+					{
                     // this should be a message that starts on...
                     runQueue.SendMessage("0", DateTime.UtcNow-dt);
+					}
+					catch(Exception ex)
+					{
+						_logger.LogError(ex, $"Failed to set message for event with date of {dt}");
+					}
                 }
 			}
 
@@ -63,8 +70,7 @@ namespace rodeogo
 		private static string GetSmsBody(DrawData d)
 		{
 			return $@"{d.EventDate.ToShortDateString()}
-{d.EventSeriesName}
-{d.EventTypeDescription}
+{d.LocationName}
 {d.FirstName} {d.LastName}
 Run #: {d.RunId} on {d.HorseName}
 Rotation : {d.Rotation}
@@ -84,15 +90,13 @@ c.SendMobile,
 c.FirstName,
 c.LastName,
 ev.EventDate,
-es.EventSeriesName,
-et.EventTypeDescription 
+el.LocationName
 from DrawNotifications dn
 join EventRun er on er.CustomerId = dn.CustomerId and er.EventId = dn.EventId and er.EventRunId = dn.EventRunId
 join Horses h on h.HorseId = er.HorseId and h.CustomerId = er.CustomerId
 join Contestants c on c.CustomerId = er.CustomerId and c.ContestantId = er.ContestantId
 join Events ev on ev.CustomerId = er.CustomerId and ev.EventId = er.EventId
-join EventSeries es on es.CustomerId = er.CustomerId and es.EventSeriesId = ev.EventSeriesId
-join EventTypes et on et.CustomerId = er.CustomerId and et.EventTypeId = ev.EventTypeId
+join EventLocations el on el.CustomerId = er.CustomerId and el.EventLocationId = ev.EventLocationId
 where dn.Notified = 0 and c.MobileNumber is not null and c.MobileNumber <> '';";
 			}
 		}

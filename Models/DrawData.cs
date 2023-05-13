@@ -9,8 +9,7 @@ internal class DrawData
 	public string? FirstName { get; set; }
 	public string? LastName { get; set; }
 	public DateTime EventDate { get; set; }
-	public string? EventSeriesName { get; set; }
-	public string? EventTypeDescription { get; set; }
+	public string? LocationName { get; set; }
 	public int CustomerId { get; set; }
 	public int EventId { get; set; }
 	public int EventRunId { get; set; }

@@ -34,8 +34,17 @@ namespace rodeogo
 				var data = conn.Query<RunData>(RunsQuery).ToList();
 				foreach (var run in data)
 				{
+					try
+					{
 					SendMessage(new SMS { Body = GetSmsBody(run), To = run.MobileNumber, From = _config["twilio:msgSvc"] });
+					}
+					catch(Twilio.Exceptions.ApiException te)
+					{
+						_logger.LogInformation(te.Message);
+						// keep working...
+					}
 					conn.Execute("update RunNotifications set Notified = 1 where CustomerId = @CustomerId and EventId = @EventId and EventRunId = @EventRunId", run);
+				
 				}
 
 				// when should we run this function again?
