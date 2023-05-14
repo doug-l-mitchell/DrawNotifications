@@ -35,6 +35,7 @@ from EventRun er
 join Events ev on ev.CustomerId = er.CustomerId and ev.EventId = er.EventId
 where er.RunComplete = 1 
 	and ev.EnableNotification = 1
+	and ev.EventDate >= adddate(curdate(), INTERVAL -1 DAY)
 	and er.LastUpdated > adddate(now(), INTERVAL -20 MINUTE)");
 
 				_logger.LogInformation($"query complete: added {count} records");
