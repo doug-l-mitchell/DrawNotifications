@@ -27,7 +27,7 @@ namespace rodeogo
 		[Function("DrawNotificationsFunction")]
 		public void Run([TimerTrigger("*/30 * * * *", RunOnStartup = true)] MyInfo myTimer)
 		{
-			var runQueue = new QueueClient(_config["AzureWebJobsStorage"], "run-notify-execute");
+			// var runQueue = new QueueClient(_config["AzureWebJobsStorage"], "run-notify-execute");
 			_logger.LogInformation("starting");
 			using (var conn = new MySqlConnection(_config["dbConn"]))
 			{
@@ -40,18 +40,18 @@ namespace rodeogo
 				}
 
                 // find dates that the events will start in order to trigger the run function
-                foreach(var dt in data.Select(d => d.EventDate).Distinct())
-                {
-					try
-					{
-                    // this should be a message that starts on...
-                    runQueue.SendMessage("0", DateTime.UtcNow-dt);
-					}
-					catch(Exception ex)
-					{
-						_logger.LogError(ex, $"Failed to set message for event with date of {dt}");
-					}
-                }
+                // foreach(var dt in data.Select(d => d.EventDate).Distinct())
+                // {
+				// 	try
+				// 	{
+                //     // this should be a message that starts on...
+                //     runQueue.SendMessage("0", DateTime.UtcNow-dt);
+				// 	}
+				// 	catch(Exception ex)
+				// 	{
+				// 		_logger.LogError(ex, $"Failed to set message for event with date of {dt}");
+				// 	}
+                // }
 			}
 
 			_logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");

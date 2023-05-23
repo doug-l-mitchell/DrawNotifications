@@ -25,7 +25,8 @@ namespace rodeogo
 		}
 
 		[Function("RunNotificationFunction")]
-		public void Run([QueueTrigger("run-notify-execute", Connection = "AzureWebJobsStorage")] string msg)
+		public void Run([TimerTrigger("*/10 * * * *", RunOnStartup = true)] MyInfo myTimer)
+		// public void Run([QueueTrigger("run-notify-execute", Connection = "AzureWebJobsStorage")] string msg)
 		{
 			var runQueue = new QueueClient(_config["AzureWebJobsStorage"], "run-notify-execute");
 
@@ -52,14 +53,14 @@ namespace rodeogo
 				// if we didn't process messages
 				//   1 hour * count of tries (tries are recorded in the input message)
 				// after 4 - 1 hour tries, stop
-                var cnt = 0;
-                int.TryParse(msg, out cnt);
-				if ( cnt < 5)
-				{
-					var ts = data.Count() > 0 ? TimeSpan.FromMinutes(5)
-						: TimeSpan.FromHours(1);
-                    runQueue.SendMessage((++cnt).ToString(), ts);
-				}
+                // var cnt = 0;
+                // int.TryParse(msg, out cnt);
+				// if ( cnt < 5)
+				// {
+				// 	var ts = data.Count() > 0 ? TimeSpan.FromMinutes(5)
+				// 		: TimeSpan.FromHours(1);
+                //     runQueue.SendMessage((++cnt).ToString(), ts);
+				// }
 			}
 
 		}
