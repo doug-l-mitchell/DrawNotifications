@@ -21,11 +21,11 @@ namespace rodeogo
 		{
 			_config = config;
 			_logger = loggerFactory.CreateLogger<DrawNotificationsFunction>();
-            TwilioClient.Init(_config["twilio:acctSid"], _config["twilio:auth"]);
+			TwilioClient.Init(_config["twilio:acctSid"], _config["twilio:auth"]);
 		}
 
 		[Function("DrawNotificationsFunction")]
-		public void Run([TimerTrigger("*/30 * * * *", RunOnStartup = true)] MyInfo myTimer)
+		public void Run([TimerTrigger("*/30 * * * *", RunOnStartup = false)] MyInfo myTimer)
 		{
 			// var runQueue = new QueueClient(_config["AzureWebJobsStorage"], "run-notify-execute");
 			_logger.LogInformation("starting");
@@ -35,36 +35,43 @@ namespace rodeogo
 				_logger.LogInformation($"found {data.Count()} records");
 				foreach (var draw in data)
 				{
-                    SendMessage(new SMS { Body = GetSmsBody(draw), To = draw.MobileNumber, From = _config["twilio:msgSvc"] });
+					SendMessage(new SMS { Body = GetSmsBody(draw), To = draw.MobileNumber, From = _config["twilio:msgSvc"] });
 					conn.Execute("update DrawNotifications set Notified = 1 where CustomerId = @CustomerId and EventId = @EventId and EventRunId = @EventRunId", draw);
 				}
 
-                // find dates that the events will start in order to trigger the run function
-                // foreach(var dt in data.Select(d => d.EventDate).Distinct())
-                // {
+				// find dates that the events will start in order to trigger the run function
+				// foreach(var dt in data.Select(d => d.EventDate).Distinct())
+				// {
 				// 	try
 				// 	{
-                //     // this should be a message that starts on...
-                //     runQueue.SendMessage("0", DateTime.UtcNow-dt);
+				//     // this should be a message that starts on...
+				//     runQueue.SendMessage("0", DateTime.UtcNow-dt);
 				// 	}
 				// 	catch(Exception ex)
 				// 	{
 				// 		_logger.LogError(ex, $"Failed to set message for event with date of {dt}");
 				// 	}
-                // }
+				// }
 			}
 
 			_logger.LogInformation($"C# Timer trigger function executed at: {DateTime.Now}");
 		}
 
-		private static string SendMessage(SMS m)
+		private void SendMessage(SMS m)
 		{
-			var res = MessageResource.Create(
-				body: m.Body,
-				from: new PhoneNumber(m.From),
-				to: new PhoneNumber(m.To)
-			);
-			return res.Sid;
+			try
+			{
+				var res = MessageResource.Create(
+					body: m.Body,
+					from: new PhoneNumber(m.From),
+					to: new PhoneNumber(m.To)
+				);
+			}
+			catch (Exception e)
+			{
+				_logger.LogInformation($"Failed to send to {m.To}: {e.ToString()}");
+			}
+
 		}
 
 		private static string GetSmsBody(DrawData d)

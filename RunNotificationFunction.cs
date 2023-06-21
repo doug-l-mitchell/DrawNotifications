@@ -25,8 +25,7 @@ namespace rodeogo
 		}
 
 		[Function("RunNotificationFunction")]
-		public void Run([TimerTrigger("*/10 * * * *", RunOnStartup = true)] MyInfo myTimer)
-		// public void Run([QueueTrigger("run-notify-execute", Connection = "AzureWebJobsStorage")] string msg)
+		public void Run([TimerTrigger("*/10 * * * *", RunOnStartup = false)] MyInfo myTimer)
 		{
 			var runQueue = new QueueClient(_config["AzureWebJobsStorage"], "run-notify-execute");
 
@@ -65,14 +64,19 @@ namespace rodeogo
 
 		}
 
-		private static string SendMessage(SMS m)
+		private void SendMessage(SMS m)
 		{
+			try {
 			var res = MessageResource.Create(
 				body: m.Body,
 				from: new PhoneNumber(m.From),
 				to: new PhoneNumber(m.To)
 			);
-			return res.Sid;
+			}
+			catch(Exception e)
+			{
+				_logger.LogInformation($"Failed to send to {m.To}: {e.ToString()}");
+			}
 		}
 
 		private static string GetSmsBody(RunData d)
@@ -100,7 +104,10 @@ c.FirstName,
 c.LastName,
 ev.EventDate,
 es.EventSeriesName,
-et.EventTypeDescription 
+et.EventTypeDescription, 
+er.RunTime,
+er.TotalPenalies as TotalPenalties,
+er.TotalRunTime 
 from RunNotifications rn
 join EventRun er on er.CustomerId = rn.CustomerId and er.EventId = rn.EventId and er.EventRunId = rn.EventRunId
 join Horses h on h.HorseId = er.HorseId and h.CustomerId = er.CustomerId

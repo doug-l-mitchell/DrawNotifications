@@ -9,11 +9,15 @@
   <ItemGroup>
     <PackageReference Include="Azure.Storage.Queues" Version="12.12.0" />
     <PackageReference Include="Dapper" Version="2.0.123" />
+    <PackageReference Include="itext7" Version="8.0.0" />
+    <PackageReference Include="itext7.bouncy-castle-adapter" Version="8.0.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker" Version="1.8.0" />
+    <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Http" Version="3.0.13" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Storage.Queues" Version="5.0.0" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Extensions.Timer" Version="4.0.1" />
     <PackageReference Include="Microsoft.Azure.Functions.Worker.Sdk" Version="1.7.0" />
     <PackageReference Include="Mysql.Data" Version="8.0.31" />
+    <PackageReference Include="Nut" Version="3.4.1" />
     <PackageReference Include="Twilio" Version="5.80.0" />
   </ItemGroup>
   <ItemGroup>

@@ -1,5 +1,4 @@
 namespace rodeogo;
-
 internal class RunData
 {
 	public int CustomerId { get; set; }
