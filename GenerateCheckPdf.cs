@@ -60,11 +60,6 @@ order by r.Classification, r.ClassificationPlace",
 	new { SeriesId = seriesId, EvDate = date }
 				);
 
-				// if (!data.Any())
-				// {
-				// 	return req.CreateResponse(HttpStatusCode.NoContent);
-				// }
-
 				using (var ms = new MemoryStream())
 				{
 					using (var writer = new PdfWriter(ms))

@@ -1,12 +1,10 @@
 using System.Net;
-using System.Text;
 using Dapper;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Azure.Functions.Worker.Http;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using MySql.Data.MySqlClient;
-using Newtonsoft.Json;
 using rodeogo;
 
 namespace rgo
