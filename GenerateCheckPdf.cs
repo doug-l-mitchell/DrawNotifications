@@ -106,17 +106,17 @@ order by r.Classification, r.ClassificationPlace",
 											.SetFixedPosition(72, h - (72 * 2.5f), 72 * 5));
 
 								// Stub area
-								doc.Add(new Paragraph($@"
+								var stub = new Paragraph($@"
 {d.EventSeriesName} {d.Class} - {d.EventTypeDescription}
 Check To: {d.Payee}
 Place: {d.Classification} - {d.ClassificationPlace} Time: {d.TotalRunTime}
 Amount: {x.ToString()}
 EventDate: {d.EventDate.ToString("d")}
 Producer: {d.ProducerName}
-Location: {d.LocationName}
+Location: {d.LocationName}");
 
-							").SetFixedPosition(72 * 4, h - (72 * 6), 5 * 72));
-
+								doc.Add(stub.SetFixedPosition(72 * 3, h-410, 5 * 72));
+								doc.Add(stub.SetFixedPosition(72 * 3, h-690, 5 * 72));
 								doc.Add(areaBreak);
 							}
 

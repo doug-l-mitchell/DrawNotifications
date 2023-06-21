@@ -30,7 +30,7 @@ namespace rgo
 select distinct(p.ProducerName) as Name, p.ProducerId as Id from Producers p
 join Events e on e.CustomerId = p.CustomerId and e.ProducerId = p.ProducerId
 join EventRun r on r.CustomerId = p.CustomerId and r.EventId = e.EventId
-where p.CustomerId = 95 and e.EventDate >  date_sub(curdate(), interval 2 month);
+where p.CustomerId = 95 and e.EventDate >  date_sub(curdate(), interval 30 day);
 ");
                 var response = req.CreateResponse(HttpStatusCode.OK);
                 await response.WriteAsJsonAsync(producers);
