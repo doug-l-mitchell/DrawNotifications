@@ -128,7 +128,7 @@ Location: {d.LocationName}");
 					var response = req.CreateResponse(HttpStatusCode.OK);
 					await response.WriteBytesAsync(ms.ToArray());
 					response.Headers.Add("Content-Type", "application/pdf");
-					response.Headers.Add("content-disposition", $"attachment;filename={f?.EventSeriesName?.Replace(" ", "_") ?? seriesId.ToString()}_{f?.EventDate.ToString("yyyy_MM_dd")}.pdf");
+					response.Headers.Add("content-disposition", $"attachment;filename={Uri.EscapeDataString(f?.EventSeriesName?.Replace(" ", "_") ?? seriesId.ToString())}_{f?.EventDate.ToString("yyyy_MM_dd")}.pdf");
 					return response;
 				}
 

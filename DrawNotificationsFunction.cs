@@ -77,7 +77,7 @@ namespace rodeogo
 		private static string GetSmsBody(DrawData d)
 		{
 			return $@"{d.EventDate.ToShortDateString()}
-{d.LocationName}
+{d.LocationName ??  ""}
 {d.FirstName} {d.LastName}
 Run #: {d.RunId} on {d.HorseName}
 Rotation : {d.Rotation}
@@ -103,7 +103,7 @@ join EventRun er on er.CustomerId = dn.CustomerId and er.EventId = dn.EventId an
 join Horses h on h.HorseId = er.HorseId and h.CustomerId = er.CustomerId
 join Contestants c on c.CustomerId = er.CustomerId and c.ContestantId = er.ContestantId
 join Events ev on ev.CustomerId = er.CustomerId and ev.EventId = er.EventId
-join EventLocations el on el.CustomerId = er.CustomerId and el.EventLocationId = ev.EventLocationId
+left outer join EventLocations el on el.CustomerId = er.CustomerId and el.EventLocationId = ev.EventLocationId
 where dn.Notified = 0 and c.MobileNumber is not null and c.MobileNumber <> '';";
 			}
 		}

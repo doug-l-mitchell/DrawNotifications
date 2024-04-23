@@ -110,10 +110,10 @@ er.TotalPenalies as TotalPenalties,
 er.TotalRunTime 
 from RunNotifications rn
 join EventRun er on er.CustomerId = rn.CustomerId and er.EventId = rn.EventId and er.EventRunId = rn.EventRunId
-join Horses h on h.HorseId = er.HorseId and h.CustomerId = er.CustomerId
+left outer join Horses h on h.HorseId = er.HorseId and h.CustomerId = er.CustomerId
 join Contestants c on c.CustomerId = er.CustomerId and c.ContestantId = er.ContestantId
 join Events ev on ev.CustomerId = er.CustomerId and ev.EventId = er.EventId
-join EventSeries es on es.CustomerId = er.CustomerId and es.EventSeriesId = ev.EventSeriesId
+left outer join EventSeries es on es.CustomerId = er.CustomerId and es.EventSeriesId = ev.EventSeriesId
 join EventTypes et on et.CustomerId = er.CustomerId and et.EventTypeId = ev.EventTypeId
 where rn.Notified = 0 and c.MobileNumber is not null and c.MobileNumber <> '';";
 			}
