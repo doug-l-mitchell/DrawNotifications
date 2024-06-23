@@ -126,9 +126,13 @@ Location: {d.LocationName}");
 					// return content
 					var f = data.FirstOrDefault();
 					var response = req.CreateResponse(HttpStatusCode.OK);
-					await response.WriteBytesAsync(ms.ToArray());
 					response.Headers.Add("Content-Type", "application/pdf");
-					response.Headers.Add("content-disposition", $"attachment;filename={Uri.EscapeDataString(f?.EventSeriesName?.Replace(" ", "_") ?? seriesId.ToString())}_{f?.EventDate.ToString("yyyy_MM_dd")}.pdf");
+					var fileName = string.Format("attachment;filename={0}_{1}.pdf",
+					Uri.EscapeDataString(f?.EventSeriesName?.Replace(" ", "_") ?? seriesId.ToString()),
+					f?.EventDate.ToString("yyyy_MM_dd") ?? date.ToString("yyyy_MM_dd"));
+					response.Headers.Add("content-disposition", Uri.EscapeDataString(fileName));
+					
+					await response.WriteBytesAsync(ms.ToArray());
 					return response;
 				}
 
